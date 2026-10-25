@@ -1,0 +1,38 @@
+name: Build DLL
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ master, main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    env:
+      VCPKG_ROOT: C:\vcpkg
+    steps:
+      - uses: actions/checkout@v4
+
+      # Build from a short path: vcpkg/Windows fail on paths over ~250 characters.
+      - name: Copy to a short path
+        shell: pwsh
+        run: Copy-Item -Recurse -Force "$env:GITHUB_WORKSPACE" C:\w
+
+      - uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Configure
+        working-directory: C:\w
+        run: cmake --preset ci
+
+      - name: Build
+        working-directory: C:\w
+        run: cmake --build build/ci -- -k 0
+
+      - name: Upload DLL
+        uses: actions/upload-artifact@v4
+        with:
+          name: CompassNavigationOverhaul
+          path: C:\w\build\ci\CompassNavigationOverhaul.dll
+          if-no-files-found: error

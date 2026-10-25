@@ -4,6 +4,28 @@
 
 namespace util
 {
+	// Was a member extension of the project's own NiPoint3; CommonLibSSE-NG's NiPoint3 does not have it
+	inline float GetHorizontalAngleTo(const RE::NiPoint3& a_from, const RE::NiPoint3& a_to)
+	{
+		RE::NiPoint3 diff{ a_to.x - a_from.x, a_to.y - a_from.y, a_to.z - a_from.z };
+
+		float angle;
+		if (diff.y) {
+			angle = atanf(diff.x / diff.y);
+			if (diff.y < 0.0F) {
+				angle += std::numbers::pi_v<float>;
+			}
+		} else {
+			if (diff.x <= 0.0F) {
+				angle = 3 * std::numbers::pi_v<float> / 2;
+			} else {
+				angle = std::numbers::pi_v<float> / 2;
+			}
+		}
+
+		return angle;
+	}
+
 	static constexpr float pi = std::numbers::pi_v<float>;
 
 	constexpr void CropAngleRange(float& a_angle)
@@ -45,7 +67,7 @@ namespace util
 			compassAngle += parentCell->GetNorthRotation();
 		}
 
-		float headingAngle = playerPos.GetHorizontalAngleTo(markerPos);
+		float headingAngle = GetHorizontalAngleTo(playerPos, markerPos);
 
 		CropAngleRange(playerCameraYawAngle);
 		CropAngleRange(compassAngle);

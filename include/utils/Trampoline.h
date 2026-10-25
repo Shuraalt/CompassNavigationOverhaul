@@ -130,7 +130,9 @@ namespace hooks
 		DefaultTrampoline(std::size_t a_size, bool a_trySKSEReserve = true) :
 			Trampoline{ SKSE::GetTrampoline() }
 		{
-			SKSE::AllocTrampoline(a_size, a_trySKSEReserve);
+			// The trampoline is created once, from this first request. Leave room for the 14-byte
+			// branch stubs that write_branch/write_call add on top of the generated hook code.
+			SKSE::AllocTrampoline((std::max)(a_size + 128, static_cast<std::size_t>(512)), a_trySKSEReserve);
 		}
 	};
 

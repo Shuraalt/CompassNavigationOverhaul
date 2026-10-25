@@ -134,6 +134,20 @@
             ],
             "displayName": "RelWithDebInfo (VR only)",
             "binaryDir": "${sourceDir}/build/relwithdebinfo-vr-only"
+        },
+        {
+            "name": "ci",
+            "displayName": "CI Release",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build/ci",
+            "toolchainFile": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+            "cacheVariables": {
+                "CMAKE_CXX_COMPILER": "cl.exe",
+                "CMAKE_BUILD_TYPE": "Release",
+                "VCPKG_TARGET_TRIPLET": "x64-windows-static-md",
+                "CMAKE_MSVC_RUNTIME_LIBRARY": "MultiThreadedDLL",
+                "CMAKE_CXX_FLAGS": "/permissive- /Zc:preprocessor /EHsc /MP -DWIN32_LEAN_AND_MEAN -DNOMINMAX -DUNICODE -D_UNICODE"
+            }
         }
     ],
     "buildPresets": [

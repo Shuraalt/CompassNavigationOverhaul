@@ -36,7 +36,18 @@ source_group(
 ## Configure target DLL
 ########################################################################################################################
 
-find_package(CommonLibSSE CONFIG REQUIRED)
+include(FetchContent)
+set(BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(SKSE_SUPPORT_XBYAK ON CACHE BOOL "" FORCE)
+set(SKSE_SUPPORT_PATCH_SAFETY OFF CACHE BOOL "" FORCE)
+FetchContent_Declare(
+	CommonLibSSE
+	GIT_REPOSITORY https://github.com/alandtse/CommonLibSSE-NG.git
+	GIT_TAG v13.1.0
+	GIT_SHALLOW TRUE
+)
+FetchContent_MakeAvailable(CommonLibSSE)
+include("${commonlibsse_SOURCE_DIR}/cmake/CommonLibSSE.cmake")
 find_package(spdlog REQUIRED CONFIG)
 find_package(directxtk CONFIG REQUIRED)
 
@@ -72,33 +83,4 @@ target_precompile_headers(
 		include/PCH.h
 )
 
-########################################################################################################################
-## Automatic plugin deployment
-########################################################################################################################
-
-set(SKYRIM_SE_DIR "C:/Program Files (x86)/Steam/steamapps/common/Skyrim Special Edition")
-set(SKYRIM_VR_DIR "C:/Program Files (x86)/Steam/steamapps/common/Skyrim VR")
-
-if ("$ENV{RUNTIME_DISABLE_FLAGS}" STREQUAL "")
-	set(COPY_SE YES)
-	set(COPY_VR YES)
-elseif ("$ENV{RUNTIME_DISABLE_FLAGS}" STREQUAL "-UENABLE_SKYRIM_VR")
-	set(COPY_SE YES)
-	set(COPY_VR NO)
-elseif ("$ENV{RUNTIME_DISABLE_FLAGS}" STREQUAL "-UENABLE_SKYRIM_SE -UENABLE_SKYRIM_AE")
-	set(COPY_SE NO)
-	set(COPY_VR YES)
-endif()
-
-if (COPY_SE)
-	add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-		COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${PROJECT_NAME}>
-		"${SKYRIM_SE_DIR}/Data/SKSE/Plugins/$<TARGET_FILE_NAME:${PROJECT_NAME}>"
-	)
-endif()
-if (COPY_VR)
-	add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-		COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${PROJECT_NAME}>
-		"${SKYRIM_VR_DIR}/Data/SKSE/Plugins/$<TARGET_FILE_NAME:${PROJECT_NAME}>"
-	)
-endif()
+########################################
