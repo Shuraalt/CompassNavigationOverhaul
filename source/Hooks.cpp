@@ -22,7 +22,7 @@ namespace hooks
 			auto player = RE::PlayerCharacter::GetSingleton();
 
 			RE::BSTArray<RE::BGSInstancedQuestObjective>& playerObjectives = REL::Module::IsVR() ?
-																				player->GetVRPlayerRuntimeData().objectives :
+																				player->GetVRPlayerRuntimeData()->objectives :
 																				player->GetPlayerRuntimeData().objectives;
 
 			// The objectives are in oldest-to-newest order, so we iterate from newest-to-oldest
@@ -34,7 +34,7 @@ namespace hooks
 
 				for (int j = 0; j < questObjective->numTargets; j++)
 				{
-					auto questObjectiveTarget = reinterpret_cast<RE::TESQuestTarget*>(a_questTarget->unk00);
+					auto questObjectiveTarget = *reinterpret_cast<RE::TESQuestTarget* const*>(a_questTarget);
 
 					if (questObjectiveTarget == questObjective->targets[j])
 					{

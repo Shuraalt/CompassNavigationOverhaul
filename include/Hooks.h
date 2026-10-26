@@ -174,7 +174,7 @@ namespace hooks
 
 			static RE::GFxMovieDef* GetCompassMovieDef();
 
-			static inline void Install(SKSE::WinAPI::HMODULE a_moduleHandle)
+			static inline void Install(REX::W32::HMODULE a_moduleHandle)
 			{
 				// `ImportManager::SetupHUDMenu` call to a_movieView->GetMovieDef()
 				struct GetCompassMovieDefHook : Hook<6>

@@ -38,7 +38,7 @@ void SKSEMessageListener(SKSE::MessagingInterface::Message* a_msg)
 		if (mapMarkerFrameworkPluginInfo && mapMarkerFrameworkPluginInfo->version < 0x02020000)
 		{
 			logger::info("CoMAP detected. Loading compatibility patch...");
-			hooks::compat::MapMarkerFramework::Install(SKSE::WinAPI::GetModuleHandle("MapMarkerFramework.dll"));
+			hooks::compat::MapMarkerFramework::Install(REX::W32::GetModuleHandleA("MapMarkerFramework.dll"));
 			hooks::compat::MapMarkerFramework::pluginInfo = mapMarkerFrameworkPluginInfo;
 			logger::info("Successfully loaded compatibility patch for CoMAP!");
 		}

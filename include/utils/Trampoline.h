@@ -189,7 +189,7 @@ namespace hooks
 			inst->set_trampoline(base, a_size,
 				[](void* a_mem, std::size_t)
 				{
-					SKSE::WinAPI::VirtualFree(a_mem, 0, MEM_RELEASE);
+					REX::W32::VirtualFree(a_mem, 0, MEM_RELEASE);
 				});
 		}
 	};
@@ -199,7 +199,7 @@ namespace hooks
 	public:
 
 		 template <SKSE::stl::nttp::string str>
-		static std::uintptr_t FindPattern(SKSE::WinAPI::HMODULE a_moduleHandle)
+		static std::uintptr_t FindPattern(REX::W32::HMODULE a_moduleHandle)
 		{
 			MODULEINFO moduleInfo;
 			GetModuleInformation(GetCurrentProcess(), reinterpret_cast<HMODULE>(a_moduleHandle), &moduleInfo, sizeof(MODULEINFO));
